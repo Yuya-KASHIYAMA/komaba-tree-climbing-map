@@ -103,7 +103,39 @@
 </div>
 
 <script>
-  let trees = [];
+  const trees = [
+    {
+      id: "tree001",
+      species: "マツ",
+      difficulty: 5,
+      size: "大",
+      x: 0.5428,
+      y: 0.6951,
+      photos: []
+    },
+    {
+      id: "tree002",
+      species: "イチョウ",
+      difficulty: 4,
+      size: "中",
+      x: 0.5286,
+      y: 0.5920,
+      photos: ["https://i.postimg.cc/pLZ6KkD5/1720494892598.jpg"]
+    },
+    {
+      id: "tree003",
+      species: "未知",
+      difficulty: 2,
+      size: "小",
+      x: 0.1071,
+      y: 0.3227,
+      photos: [
+        "https://i.postimg.cc/13Gc5Yn0/image.png",
+        "https://i.postimg.cc/Ls0VrggG/image.png"
+      ]
+    }
+  ];
+
   const container = document.getElementById("map-container");
   const image = document.getElementById("map-image");
   const photoIndices = {};
@@ -176,28 +208,6 @@
     });
   }
 
-  function loadCSV() {
-    fetch("trees.csv")
-      .then(response => response.text())
-      .then(data => {
-        const lines = data.trim().split("\n");
-        const headers = lines[0].split(",");
-        trees = lines.slice(1).map(line => {
-          const cols = line.split(",");
-          return {
-            id: cols[0],
-            species: cols[1],
-            difficulty: parseInt(cols[2]),
-            size: cols[3],
-            x: parseFloat(cols[4]),
-            y: parseFloat(cols[5]),
-            photos: cols[6] ? cols[6].split("|") : []
-          };
-        });
-        tryPlacePins();
-      });
-  }
-
   function tryPlacePins() {
     if (image.complete) {
       placePins();
@@ -206,7 +216,7 @@
     }
   }
 
-  document.addEventListener("DOMContentLoaded", loadCSV);
+  document.addEventListener("DOMContentLoaded", tryPlacePins);
   window.addEventListener("resize", placePins);
 </script>
 
