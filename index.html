@@ -2,6 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>駒場木登りマップ</title>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP&display=swap" rel="stylesheet">
   <style>
@@ -56,6 +57,22 @@
       display: block;
       margin-top: 5px;
     }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.5em;
+        margin: 15px 0;
+      }
+
+      .tooltip {
+        font-size: 0.8em;
+        padding: 6px;
+      }
+
+      .tooltip img {
+        max-width: 100px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -106,6 +123,9 @@
   }
 
   function showTooltip(tree, pin) {
+    let existingTooltip = document.querySelector(".tooltip");
+    if (existingTooltip) existingTooltip.remove();
+
     let tooltip = document.createElement("div");
     tooltip.className = "tooltip";
     tooltip.innerHTML = `
@@ -119,9 +139,12 @@
     tooltip.style.top = (rect.top + window.scrollY + (tree.photos.length ? 0 : 20)) + "px";
     tooltip.style.display = "block";
 
-    pin.onmouseleave = () => {
-      tooltip.remove();
-    };
+    document.addEventListener("click", function handleClickOutside(event) {
+      if (!tooltip.contains(event.target) && event.target !== pin) {
+        tooltip.remove();
+        document.removeEventListener("click", handleClickOutside);
+      }
+    });
   }
 
   function placePins() {
@@ -137,7 +160,7 @@
       pin.style.left = (tree.x * 100) + "%";
       pin.style.top = (tree.y * 100) + "%";
 
-      pin.addEventListener("mouseenter", () => showTooltip(tree, pin));
+      pin.addEventListener("click", () => showTooltip(tree, pin));
 
       container.appendChild(pin);
     });
