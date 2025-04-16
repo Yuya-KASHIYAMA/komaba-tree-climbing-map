@@ -14,12 +14,6 @@
       text-align: center;
     }
 
-    h1 {
-      color: #007101;
-      margin: 20px 0;
-      font-size: 2em;
-    }
-
     #map-container {
       position: relative;
       display: inline-block;
@@ -37,6 +31,7 @@
       background-color: #007101;
       border-radius: 50%;
       transform: translate(-50%, -50%);
+      aspect-ratio: 1 / 1;
     }
 
     .tooltip {
@@ -58,12 +53,36 @@
       margin-top: 5px;
     }
 
-    @media (max-width: 600px) {
-      h1 {
-        font-size: 1.5em;
-        margin: 15px 0;
-      }
+    .photo-container {
+      position: relative;
+    }
 
+    .photo-container img {
+      max-width: 150px;
+      display: block;
+      margin: 5px auto 0;
+    }
+
+    .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(255, 255, 255, 0.8);
+      border: 1px solid #ccc;
+      cursor: pointer;
+      padding: 2px 6px;
+      user-select: none;
+    }
+
+    .arrow.left {
+      left: 0;
+    }
+
+    .arrow.right {
+      right: 0;
+    }
+
+    @media (max-width: 600px) {
       .tooltip {
         font-size: 0.8em;
         padding: 6px;
@@ -77,8 +96,6 @@
 </head>
 <body>
 
-<h1>駒場木登りマップ</h1>
-
 <div id="map-container">
   <img id="map-image" src="komabatm_V002a.png" alt="Komaba Map" />
 </div>
@@ -90,8 +107,8 @@
       species: "マツ",
       difficulty: 4,
       size: "大",
-      x: 0.5425,
-      y: 0.6941,
+      x: 0.5428,
+      y: 0.6951,
       photos: []
     },
     {
@@ -99,9 +116,11 @@
       species: "イチョウ",
       difficulty: 4,
       size: "中",
-      x: 0.5266,
+      x: 0.5286,
       y: 0.5920,
-      photos: ["https://i.postimg.cc/pLZ6KkD5/1720494892598.jpg"]
+      photos: [
+        "https://i.postimg.cc/pLZ6KkD5/1720494892598.jpg"
+      ]
     },
     {
       id: "tree003",
@@ -110,7 +129,10 @@
       size: "小",
       x: 0.1071,
       y: 0.3227,
-      photos: []
+      photos: [
+          "https://i.postimg.cc/13Gc5Yn0/image.png" , 
+          "https://i.postimg.cc/Ls0VrggG/image.png"
+      ]
     }
   ];
 
@@ -118,7 +140,7 @@
   const image = document.getElementById("map-image");
 
   function getSizePx(size, scale) {
-    const baseSizes = { "大": 36, "中": 27, "小": 18 }; // 各サイズを3倍に
+    const baseSizes = { "大": 42, "中": 35, "小": 20 }; 
     return baseSizes[size] * scale;
   }
 
@@ -128,11 +150,24 @@
 
     let tooltip = document.createElement("div");
     tooltip.className = "tooltip";
+
+    let photoHTML = "";
+    if (tree.photos.length > 0) {
+      const imgId = `photo-${tree.id}`;
+      photoHTML = `
+        <div class="photo-container">
+          ${tree.photos.length > 1 ? `<div class="arrow left" onclick="changePhoto('${tree.id}', -1)">&#9664;</div>` : ''}
+          <img id="${imgId}" src="${tree.photos[0]}" alt="tree photo">
+          ${tree.photos.length > 1 ? `<div class="arrow right" onclick="changePhoto('${tree.id}', 1)">&#9654;</div>` : ''}
+        </div>`;
+    }
+
     tooltip.innerHTML = `
       <strong>樹種:</strong> ${tree.species}<br>
       <strong>難易度:</strong> ${'★'.repeat(tree.difficulty)}${'☆'.repeat(6 - tree.difficulty)}
-      ${tree.photos.length ? '<img src="' + tree.photos[0] + '" alt="tree photo">' : ''}
+      ${photoHTML}
     `;
+
     document.body.appendChild(tooltip);
     const rect = pin.getBoundingClientRect();
     tooltip.style.left = rect.right + 5 + "px";
@@ -145,6 +180,18 @@
         document.removeEventListener("click", handleClickOutside);
       }
     });
+  }
+
+  const photoIndices = {};
+
+  function changePhoto(treeId, direction) {
+    const tree = trees.find(t => t.id === treeId);
+    if (!tree || tree.photos.length < 2) return;
+    photoIndices[treeId] = (photoIndices[treeId] || 0) + direction;
+    if (photoIndices[treeId] < 0) photoIndices[treeId] = tree.photos.length - 1;
+    if (photoIndices[treeId] >= tree.photos.length) photoIndices[treeId] = 0;
+    const img = document.getElementById(`photo-${treeId}`);
+    img.src = tree.photos[photoIndices[treeId]];
   }
 
   function placePins() {
