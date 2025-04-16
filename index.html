@@ -14,6 +14,19 @@
       text-align: center;
     }
 
+    #title-image {
+    margin-top: 10px;
+    transition: margin-left 0.3s ease;
+    margin-left: 0;
+　　}
+
+    #title-image img {
+      width: 70%;
+      height: auto;
+      display: block;
+      margin: 0 auto 5px;
+    }
+
     #map-container {
       position: relative;
       display: inline-block;
@@ -165,7 +178,7 @@
   </style>
 </head>
 <body>
-
+  
 <div id="hamburger" onclick="toggleMenu()">
   <span></span>
   <span></span>
@@ -177,8 +190,13 @@
   <div id="tree-list"></div>
 </div>
 
+<div id="main-content">
+<div id="title-image">
+    <img src="komabatmtitle.png" alt="駒場木登りマップタイトル画像" />
+</div>
+    
 <div id="map-container">
-  <img id="map-image" src="komabatm_V002a.png" alt="Komaba Map" />
+  <img id="map-image" src="komabatm_V003a.png" alt="Komaba Map" />
 </div>
 
 <script src="trees.js"></script>
@@ -192,10 +210,14 @@
   const menuMap = {}; // tree.id -> menu item DOM
 
   function toggleMenu() {
-    const menu = document.getElementById("menu");
+  　const menu = document.getElementById("menu");
+    const titleImage = document.getElementById("title-image");
     menu.classList.toggle("open");
+  
     if (window.innerWidth >= 600) {
-      container.style.marginLeft = menu.classList.contains("open") ? "250px" : "0";
+      const marginValue = menu.classList.contains("open") ? "250px" : "0";
+      container.style.marginLeft = marginValue;
+      titleImage.style.marginLeft = marginValue;
     }
   }
 
