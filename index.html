@@ -67,11 +67,13 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background-color: rgba(255, 255, 255, 0.8);
-      border: 1px solid #ccc;
+      font-size: 10px;
       cursor: pointer;
-      padding: 2px 6px;
       user-select: none;
+      padding: 0 2px;
+      color: white;
+      opacity: 0.5;
+      filter: drop-shadow(0 0 2px black);
     }
 
     .arrow.left {
@@ -101,43 +103,10 @@
 </div>
 
 <script>
-  const trees = [
-    {
-      id: "tree001",
-      species: "マツ",
-      difficulty: 4,
-      size: "大",
-      x: 0.5428,
-      y: 0.6951,
-      photos: []
-    },
-    {
-      id: "tree002",
-      species: "イチョウ",
-      difficulty: 4,
-      size: "中",
-      x: 0.5286,
-      y: 0.5920,
-      photos: [
-        "https://i.postimg.cc/pLZ6KkD5/1720494892598.jpg"
-      ]
-    },
-    {
-      id: "tree003",
-      species: "未知",
-      difficulty: 2,
-      size: "小",
-      x: 0.1071,
-      y: 0.3227,
-      photos: [
-          "https://i.postimg.cc/13Gc5Yn0/image.png" , 
-          "https://i.postimg.cc/Ls0VrggG/image.png"
-      ]
-    }
-  ];
-
+  let trees = [];
   const container = document.getElementById("map-container");
   const image = document.getElementById("map-image");
+  const photoIndices = {};
 
   function getSizePx(size, scale) {
     const baseSizes = { "大": 42, "中": 35, "小": 20 }; 
@@ -182,8 +151,6 @@
     });
   }
 
-  const photoIndices = {};
-
   function changePhoto(treeId, direction) {
     const tree = trees.find(t => t.id === treeId);
     if (!tree || tree.photos.length < 2) return;
@@ -196,9 +163,7 @@
 
   function placePins() {
     const scale = image.clientWidth / image.naturalWidth;
-
     document.querySelectorAll(".tree-pin").forEach(pin => pin.remove());
-
     trees.forEach(tree => {
       const pin = document.createElement("div");
       pin.className = "tree-pin";
@@ -206,11 +171,31 @@
       pin.style.width = pin.style.height = sizePx + "px";
       pin.style.left = (tree.x * 100) + "%";
       pin.style.top = (tree.y * 100) + "%";
-
       pin.addEventListener("click", () => showTooltip(tree, pin));
-
       container.appendChild(pin);
     });
+  }
+
+  function loadCSV() {
+    fetch("trees.csv")
+      .then(response => response.text())
+      .then(data => {
+        const lines = data.trim().split("\n");
+        const headers = lines[0].split(",");
+        trees = lines.slice(1).map(line => {
+          const cols = line.split(",");
+          return {
+            id: cols[0],
+            species: cols[1],
+            difficulty: parseInt(cols[2]),
+            size: cols[3],
+            x: parseFloat(cols[4]),
+            y: parseFloat(cols[5]),
+            photos: cols[6] ? cols[6].split("|") : []
+          };
+        });
+        tryPlacePins();
+      });
   }
 
   function tryPlacePins() {
@@ -221,7 +206,7 @@
     }
   }
 
-  document.addEventListener("DOMContentLoaded", tryPlacePins);
+  document.addEventListener("DOMContentLoaded", loadCSV);
   window.addEventListener("resize", placePins);
 </script>
 
