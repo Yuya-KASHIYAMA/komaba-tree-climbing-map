@@ -20,7 +20,8 @@ try:
                 "size": row["size"],
                 "x": float(row["x"]),
                 "y": float(row["y"]),
-                "photos": [url.strip() for url in row["photos"].split(",")] if row["photos"].lower() != "なし" else []
+                "photos": [url.strip() for url in row["photos"].split(",")] if row["photos"].lower() != "なし" else [],
+                "comment": row["comment"] if "comment" in row and row["comment"].strip().lower() != "なし" else ""
             }
             trees.append(tree)
 
