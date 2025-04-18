@@ -118,7 +118,7 @@
       overflow-y: auto;
       background: transparent;
       padding: 10px;
-      padding-top: 80px;
+      padding-top: 60px;
       text-align: left;
       font-size: 0.9em;
       z-index: 1000;
@@ -152,11 +152,11 @@
 
     #hamburger {
         position: fixed;
-        top: 10px;
-        left: 10px;
+        top: 5px;
+        left: 5px;
         z-index: 2000;
-        width: 40px; 
-        height: 40px;
+        width: 30px; 
+        height: 30px;
         cursor: pointer;  
         background: white;    
         border-radius: 6px;      
@@ -172,7 +172,7 @@
    #hamburger span {
         display: block;
         width: 90%;
-        height: 8px; 
+        height: 4px; 
         background: #333;
         border-radius: 2px; 
         transition: 0.3s;
@@ -258,11 +258,11 @@
     }
 
     tooltip.innerHTML = `
-      <strong>樹種:</strong> ${tree.species}<br>
-      ${'✦'.repeat(tree.difficulty)}${'✧'.repeat(6 - tree.difficulty)}<br>
-      ${photoHTML}
-      ${tree.comment ? `<strong>メモ:</strong> <span class="comment-text">${tree.comment}</span><br>` : ''}
-    `;
+        <strong>樹種:</strong> ${tree.species}<br>
+        ${'✦'.repeat(tree.difficulty)}${'✧'.repeat(6 - tree.difficulty)}<br>
+        ${photoHTML}
+        ${tree.comment ? `<span class="comment-text"><strong>メモ:</strong>${tree.comment}</span><br>` : ''}
+`     ;
 
     document.body.appendChild(tooltip);
     const rect = pin.getBoundingClientRect();
