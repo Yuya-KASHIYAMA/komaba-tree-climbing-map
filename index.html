@@ -68,6 +68,11 @@
       z-index: 10;
     }
 
+        .comment-text {
+      font-size: 0.6em;
+      color: #333;
+    }
+
     .tooltip img {
       max-width: 150px;
       display: block;
@@ -109,11 +114,11 @@
       position: fixed;
       top: 0;
       bottom: 0;
-      width: 300px;
+      width: 270px;
       overflow-y: auto;
       background: transparent;
       padding: 10px;
-      padding-top: 50px;
+      padding-top: 80px;
       text-align: left;
       font-size: 0.9em;
       z-index: 1000;
@@ -247,7 +252,7 @@
       <strong>樹種:</strong> ${tree.species}<br>
       ${'✦'.repeat(tree.difficulty)}${'✧'.repeat(6 - tree.difficulty)}<br>
       ${photoHTML}
-      ${tree.comment ? `<strong>コメント:</strong> ${tree.comment}<br>` : ''}
+      ${tree.comment ? `<strong>メモ:</strong> <span class="comment-text">${tree.comment}</span><br>` : ''}
     `;
 
     document.body.appendChild(tooltip);
