@@ -68,13 +68,14 @@
       z-index: 10;
     }
 
-        .comment-text {
+    .comment-text {
       font-size: 0.6em;
       color: #333;
     }
 
     .tooltip img {
       max-width: 150px;
+      max-height: 250px;
       display: block;
       margin-top: 5px;
       border: 1px solid #333; 
@@ -268,26 +269,9 @@
 
     document.body.appendChild(tooltip);
 
-
-const rect = pin.getBoundingClientRect();
-const tooltipWidth = 220; 
-const tooltipHeight = 180; 
-
-let left = rect.right + 5;
-let top = rect.top + window.scrollY;
-
-if (left + tooltipWidth > window.innerWidth) {
-  left = rect.left - tooltipWidth - 5;
-}
-
-if (top + tooltipHeight > window.scrollY + window.innerHeight) {
-  top = window.scrollY + window.innerHeight - tooltipHeight - 10;
-  if (top < window.scrollY) top = window.scrollY + 10;
-}
-
-tooltip.style.left = left + "px";
-tooltip.style.top = top + "px";
-
+    const rect = pin.getBoundingClientRect();
+    tooltip.style.left = rect.right + 5 + "px";
+    tooltip.style.top = (rect.top + window.scrollY + (tree.photos.length ? 0 : 20)) + "px";
 
     tooltip.style.display = "block";
 
