@@ -278,15 +278,27 @@
 `     ;
 
     document.body.appendChild(tooltip);
+  const isIpadPortrait = window.innerWidth >= 768 && window.innerWidth <= 834 && window.innerHeight > window.innerWidth;
+  
+  if (isIpadPortrait) {
+    // iPad縦向きのときは、右下のあらかじめ決めた位置に出す
+    tooltip.style.top = "75%";
+    tooltip.style.left = "64%";
+    tooltip.style.transform = "translate(-50%, -50%)";
+  } else {
+    // それ以外（PC・スマホ）は、ピンの横に出す
     const rect = pin.getBoundingClientRect();
     tooltip.style.left = rect.right + 5 + "px";
     tooltip.style.top = (rect.top + window.scrollY + (tree.photos.length ? 0 : 20)) + "px";
-    tooltip.style.display = "block";
-    document.addEventListener("click", function handleClickOutside(event) {
-      if (!tooltip.contains(event.target) && event.target !== pin) {
-        tooltip.remove();
-        document.removeEventListener("click", handleClickOutside);
-      }
+  }
+
+  tooltip.style.display = "block";
+
+  document.addEventListener("click", function handleClickOutside(event) {
+    if (!tooltip.contains(event.target) && event.target !== pin) {
+      tooltip.remove();
+      document.removeEventListener("click", handleClickOutside);
+    }
     });
   }
 
