@@ -68,14 +68,13 @@
       z-index: 10;
     }
 
-    .comment-text {
+        .comment-text {
       font-size: 0.6em;
       color: #333;
     }
 
     .tooltip img {
       max-width: 150px;
-      max-height: 250px;
       display: block;
       margin-top: 5px;
       border: 1px solid #333; 
@@ -268,11 +267,9 @@
 `     ;
 
     document.body.appendChild(tooltip);
-
     const rect = pin.getBoundingClientRect();
     tooltip.style.left = rect.right + 5 + "px";
     tooltip.style.top = (rect.top + window.scrollY + (tree.photos.length ? 0 : 20)) + "px";
-
     tooltip.style.display = "block";
 
     document.addEventListener("click", function handleClickOutside(event) {
