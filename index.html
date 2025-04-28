@@ -56,17 +56,20 @@
       z-index: 10;
     }
 
-    .tooltip {
-      position: absolute;
-      background-color: white;
-      border: 1px solid #333;
-      padding: 8px;
-      border-radius: 4px;
-      font-size: 0.9em;
-      display: none;
-      white-space: nowrap;
-      z-index: 10;
-    }
+.tooltip {
+  position: fixed; /* 画面基準にする！ */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* 自分のサイズ分だけ引き算して本当の中央へ */
+  background-color: white;
+  border: 1px solid #333;
+  padding: 8px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  display: none;
+  white-space: nowrap;
+  z-index: 10;
+}
 
         .comment-text {
       font-size: 0.6em;
@@ -268,10 +271,7 @@
 
     document.body.appendChild(tooltip);
     const rect = pin.getBoundingClientRect();
-    tooltip.style.left = rect.right + 5 + "px";
-    tooltip.style.top = (rect.top + window.scrollY + (tree.photos.length ? 0 : 20)) + "px";
     tooltip.style.display = "block";
-
     document.addEventListener("click", function handleClickOutside(event) {
       if (!tooltip.contains(event.target) && event.target !== pin) {
         tooltip.remove();
